@@ -17,6 +17,7 @@ import (
 const PORT = 3540
 
 func main() {
+	fmt.Println("Listen on 3540")
     server, err := net.Listen("tcp", ":" + strconv.Itoa(PORT))
     if server == nil {
         panic(err)
