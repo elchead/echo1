@@ -1,14 +1,13 @@
-FROM golang:1.19 AS build
-
+FROM golang:alpine AS build
 WORKDIR /usr/src/app
 
 # pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
-COPY go.mod main.go
+COPY go.mod .
+COPY main.go .
 
-COPY . .
-RUN CGO_ENABLED=0 go build -v -o ./echo ./...
 
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o ./echo ./main.go
 
 FROM scratch AS export-stage
-COPY --from=build ./echo .
-#CMD ["echo"]
+COPY --from=build /usr/src/app/echo .
+CMD ["./echo"]
